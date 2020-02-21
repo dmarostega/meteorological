@@ -1,0 +1,179 @@
+﻿@model Meteorological.Models.PrevisaoViewModel;
+
+@{
+    ViewData["Title"] = "Previsao";
+}
+
+<div class="row">
+    <div class="col-md-10 mt-3">
+        <h5>Previsao do Tempo para <span id="nomeCidade"> @Model.Cidade.Nome / @Model.Cidade.UF</span></h5>
+        <p><b>Data Consulta:</b><span id="dataConsulta"> @Model.Cidade.Nome</span>  </p>
+    </div>
+    <div class="col-2 mt-3 form-group">
+        <a href="/"  class="btn btn-dark">Nova Consulta</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table id="previsao" class="table .thead-light ">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Data</th>
+                    <th style="width: 400px;">Tempo</th>
+                    <th>Miníma</th>
+                    <th>Máxima</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var x in Model.Cidade.Previsoes)
+                {
+                <tr>
+                    <td>@x.Dia.ToString("dd/MM/yyyy")</td>
+                    <td>@x.Tempo</td>
+                    <td>@x.Maxima</td>
+                    <td>@x.Minima</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p id="erroMessage"></p>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    var UrlPrevisao = "http://servicos.cptec.inpe.br/XML/cidade/7dias/{CodigoDaCidade}/previsao.xml";
+
+    /*
+    var siglas = {
+        ec: "Encoberto com Chuvas Isoladas",
+        ci: "Chuvas Isoladas",
+        c: "Chuva",
+        in: "Instável",
+        pp: "Possibilidade de Pancadas de Chuva",
+        cm: "Chuva pela Manhã",
+        cn: "Chuva pela Noite",
+        pt: "Pancadas de Chuva a Tarde",
+        pm: "Pancadas de Chuva pela Manhã",
+        np: "Nublado e Pancadas de Chuva",
+        pc: "Pancadas de Chuva",
+        pn: "Parcialmente Nublado",
+        cv: "Chuvisco",
+        ch: "Chuvoso",
+        t: "Tempestade",
+        ps: "Predomínio de Sol",
+        e: "Encoberto",
+        n: "Nublado",
+        cl: "Céu Claro",
+        nv: "Nevoeiro",
+        g: "Geada",
+        ne: "Neve",
+        pnt: "Pancadas de Chuva a Noite",
+        psc: "Possibilidade de Chuva",
+        pcm: "Possibilidade de Chuva pela Manhã",
+        pct: "Possibilidade de Chuva a Tarde",
+        pcn: "Possibilidade de Chuva a Noite",
+        npt: "Nublado com Pancadas a Tarde",
+        npn: "Nublado com Pancadas a Noite",
+        ncn: "Nublado com Possibilidade de Chuva a Noite",
+        nct: "Nublado com Possibilidade de Chuva a Tarde",
+        ncm: "Nublado com Possibilidade de Chuva pela Manhã",
+        npm: "Nublado com Pancadas pela Manhã",
+        npp: "Nublado com Possibilidade de Chuva",
+        vn: "Variação de Nebulosidade",
+        ct: "Chuva a Tarde",
+        ppn: "Possibilidade de Pancadas de Chuva a Noite",
+        ppt: "Possibilidade de Pancadas de Chuva a Tarde",
+        ppm: "Possibilidade de Pancadas de Chuva pela Manhã",
+        lt: "Não Definido",
+        null: "Erro na Leitura"
+   };
+
+*/
+    //' + UrlPrevisao.replace("{CodigoDaCidade}", code)
+    $(document).ready(function () {
+
+        var siglas = {
+            ec: "Encoberto com Chuvas Isoladas",
+            ci: "Chuvas Isoladas",
+            c: "Chuva",
+            in: "Instável",
+            pp: "Possibilidade de Pancadas de Chuva",
+            cm: "Chuva pela Manhã",
+            cn: "Chuva pela Noite",
+            pt: "Pancadas de Chuva a Tarde",
+            pm: "Pancadas de Chuva pela Manhã",
+            np: "Nublado e Pancadas de Chuva",
+            pc: "Pancadas de Chuva",
+            pn: "Parcialmente Nublado",
+            cv: "Chuvisco",
+            ch: "Chuvoso",
+            t: "Tempestade",
+            ps: "Predomínio de Sol",
+            e: "Encoberto",
+            n: "Nublado",
+            cl: "Céu Claro",
+            nv: "Nevoeiro",
+            g: "Geada",
+            ne: "Neve",
+            pnt: "Pancadas de Chuva a Noite",
+            psc: "Possibilidade de Chuva",
+            pcm: "Possibilidade de Chuva pela Manhã",
+            pct: "Possibilidade de Chuva a Tarde",
+            pcn: "Possibilidade de Chuva a Noite",
+            npt: "Nublado com Pancadas a Tarde",
+            npn: "Nublado com Pancadas a Noite",
+            ncn: "Nublado com Possibilidade de Chuva a Noite",
+            nct: "Nublado com Possibilidade de Chuva a Tarde",
+            ncm: "Nublado com Possibilidade de Chuva pela Manhã",
+            npm: "Nublado com Pancadas pela Manhã",
+            npp: "Nublado com Possibilidade de Chuva",
+            vn: "Variação de Nebulosidade",
+            ct: "Chuva a Tarde",
+            ppn: "Possibilidade de Pancadas de Chuva a Noite",
+            ppt: "Possibilidade de Pancadas de Chuva a Tarde",
+            ppm: "Possibilidade de Pancadas de Chuva pela Manhã",
+            lt: "Não Definido",
+            null: "Erro na Leitura"
+        };
+
+
+        @* @Model.Code *@
+/*
+        $.ajax({
+            url: UrlPrevisao.replace("{CodigoDaCidade}", ),
+            type: "GET",
+            dataType: "xml",
+            async: true,
+            success: function (xml) {
+                $(xml).find('cidade').each(function (k, v) {
+
+                    $("#nomeCidade").text($(this).find('nome').text() + " / " + $(this).find('uf').text());
+                    $("#dataConsulta").text(" " + $(this).find('atualizacao').text());
+
+                    $(this).find('previsao').each(function (k, v) {
+
+                        $("table#previsao").append(
+                                                '<tr>'
+                                                + '<td>' + $(this).find('dia').text() + '</td>'
+                                                + '<td>' + /*$(this).find('tempo').text()* / + siglas[null] + '</td>'
+                                                + '<td>' + $(this).find('minima').text() + '</td>'
+                                                + '<td>' + $(this).find('maxima').text() + '</td>'
+                                                +'</tr>'
+                        );
+                    });
+
+                });
+            }
+        }).done(function (xml) {
+
+        }).fail(function () {
+                alert("Falhou");
+        });
+    */ //end $.ajax
+    }); //end document.ready
+</script>

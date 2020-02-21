@@ -1,0 +1,36 @@
+﻿@model Meteorological.Models.PrevisaoViewModel;
+
+@{
+    ViewData["Title"] = "Previsao";
+}
+<div class="row">
+    <div class="col-md-12 mt-3">
+        <h2>Previsao</h2>
+        <h3 id="nomeCidade"></h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <p id="erroMessage"></p>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    var UrlPrevisao = "http://servicos.cptec.inpe.br/XML/cidade/7dias/{CodigoDaCidade}/previsao.xml ";
+    //' + UrlPrevisao.replace("{CodigoDaCidade}", code) 
+    $(document).ready(function () {
+        $.ajax({
+                url: UrlPrevisao.replace("{CodigoDaCidade}", @Model.Code),
+                type: "GET",
+                dataType: "xml",              
+                success: function (xml) {
+                    $(xml).find('cidade').each(function (k, v) {
+                        $("#nomeCidade").text($(this).find('nome').text() + $(this).find('uf').text());
+                    });
+                } 
+        }); //end $.ajax   
+    }); //end document.ready
+</script>

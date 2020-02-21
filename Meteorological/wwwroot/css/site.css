@@ -35,3 +35,81 @@ body {
         display: none;
     }
 }
+
+
+.bi::before {
+    display: inline-block;
+    content: "";
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+}
+
+.container {
+    background-color: #FCFCFC;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+.active {
+    color: black;
+}
+
+nav {
+    background-color: #97ACD6;
+    color: black;
+}
+
+svg:hover path {
+    fill: #fce57e;
+}
+
+/*  Resultados de Componente     */
+#result {
+    width: 99%;
+    margin-top: -.82em;
+    box-shadow: .9em;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+.item-city-code {
+    color: #;
+    font-size: .9em;
+    background-color: white;
+}
+
+.item-city-code {
+    padding: .5em;
+}
+
+    .item-city-code:hover {
+        background-color: #E9E9E9;
+    }
+
+    .item-city-code a {
+        text-decoration: none;
+    }
+
+        .item-city-code a:hover {
+            color: inherit;
+        }
+
+    .item-city-code p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .item-city-code div p:first-child {
+    }
+
+    .item-city-code p:last-child {
+        font-size: .8em;
+    }
+
+table#previsao{
+    font-size: .8em;
+}
